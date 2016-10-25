@@ -1,3 +1,3 @@
 <?php
-header("Location: /login.html",TRUE,307);
+header("Location: login.html",TRUE,307);
 ?>

@@ -50,12 +50,13 @@ if($_ENV["REQUEST_METHOD"] == "POST") {
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
   </head>
   <body>
-  <!--<?php var_dump($isAuthFailed); ?>-->
     <h1 class="text-center">戸田研究室公開鍵管理システム　ログイン</h1>
 
     <div class="container">
       <?php
-      if($isAuthFailed) print('<div class="alert alert-danger"><strong>ユーザ名またはパスワードが間違っています！</strong> いずれも正しいかどうか確認してください。</div>'); 
+      if($isAuthFailed) {
+        print('<div class="alert alert-danger"><strong>ユーザ名またはパスワードが間違っています！</strong> いずれも正しいかどうか確認してください。</div>');
+      } 
       ?>
       <form action="login.php" method="POST">
         <div class="form-group">

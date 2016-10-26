@@ -1,3 +1,37 @@
+<?php
+
+require("config.php");
+
+function redirectToIndexPage() {
+  header("Location: index.php",TRUE,307);
+  print("Redirecting to the index page...\n");
+  exit();
+}
+
+session_start();
+if($_SESSION && isset($_SESSION["state"])) {
+  redirectToIndexPage();
+}
+
+$isAuthFailed = false;
+
+if($_ENV["REQUEST_METHOD"] = "POST") {
+  $userName = (string)filter_input(INPUT_POST, "username");
+  $password = (string)filter_input(INPUT_POST, "password");
+  if(!empty($userName) && !empty($password)) {
+    ldap_set_option($con, LDAP_OPT_PROTOCOL_VERSION, 3);
+    ldap_set_option($con, LDAP_OPT_TIMELIMIT, 1);
+    $ldapObj = ldap_connect("ldap://" . $ldapServer);
+    if($ldapObj && ldap_bind($ldapObj, "uid=" . $userName . $ldapUserRootDN, $password)) {
+      ldap_unbind($ldapObj);
+      $_SESSION["state"] = "logined";
+      redirectToIndexPage();
+    }
+  } 
+  $isAuthFailed = true;
+}
+
+?>
 <!DOCTYPE html>
 <html lang="ja">
   <head>
@@ -18,7 +52,12 @@
   <body>
     <h1 class="text-center">戸田研究室公開鍵管理システム　ログイン</h1>
     <div class="container">
-      <form action="">
+      <?php
+      if($isAuthFailed) {
+      ?>
+      <div class="alert danger"><strong>ユーザ名またはパスワードが間違っています！</strong> いずれも正しいかどうか確認してください。</div>
+      <?php } ?>
+      <form action="login.php" method="POST">
         <div class="form-group">
           <label for="username">ユーザ名</label>
           <input type="text" class="form-control" id="username" name="username" placeholder="ユーザ名">
@@ -33,7 +72,8 @@
             ログインしたままにする
           </label>
         </div>
-        <button type="submit" class="btn btn-primary">ログイン</button>
+        <button type="reset" class="btn btn-default"></button>
+        <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon log-in"></span> ログイン</button>
       </form>
     </div>
   </body>

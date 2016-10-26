@@ -1,6 +1,7 @@
 <?php
 
 require("config.php");
+require("ldap_lib.php");
 
 function redirectToIndexPage() {
   header("Location: index.php",TRUE,307);
@@ -18,18 +19,34 @@ $isAuthFailed = false;
 if($_SERVER["REQUEST_METHOD"] == "POST") {
   $userName = (string)filter_input(INPUT_POST, "username");
   $password = (string)filter_input(INPUT_POST, "password");
-  if(!empty($userName) && !empty($password)) {
-    ldap_set_option($con, LDAP_OPT_PROTOCOL_VERSION, 3);
-    ldap_set_option($con, LDAP_OPT_TIMELIMIT, 1);
-    $ldapObj = ldap_connect("ldap://" . $ldapServer);
-    if($ldapObj && ldap_bind($ldapObj, "uid=" . $userName . $ldapUserRootDN, $password)) {
-      ldap_unbind($ldapObj);
-      $_SESSION["state"] = "logined";
-      $_SESSION["userName"] = $userName;
-      $_SESSION["password"] = $password;
-      redirectToIndexPage();
-    }
+  if(empty($userName) || empty($password)) goto AUTH_FAILED;
+  ldap_set_option($con, LDAP_OPT_PROTOCOL_VERSION, 3);
+  ldap_set_option($con, LDAP_OPT_TIMELIMIT, 1);
+  $ldapObj = ldap_connect("ldap://" . $ldapServer);
+  if(!$ldapObj || !ldap_bind($ldapObj, "uid=" . $userName . $ldapUserRootDN, $password)) goto AUTH_FAILED;
+
+  $userDN = null;
+  $groupPeopleDN = null;
+  $groupServerAdminDN = null;
+  if(!($userDN = GetUserDN($ldapObj, $userName, $ldapBaseDN))) goto UNBIND_AND_AUTH_FAILED;
+  if(!($groupPeopleDN = GetGroupDN($ldapObj, "people", $ldapBaseDN))) goto UNBIND_AND_AUTH_FAILED;
+  if(!CheckGroupEx($ldapObj, $userDN, $groupPeopleDN)) goto UNBIND_AND_AUTH_FAILED;
+
+  $isServerAdmin = false;
+  if($groupServerAdminDN = GetGroupDN($ldapObj, "serveradmin", $ldapBaseDN)) {
+    if(CheckGroupEx($ldapObj, $userDN, $groupServerAdminDN)) $isServerAdmin = true;
   }
+
+  ldap_unbind($ldapObj);
+  $_SESSION["state"] = "logined";
+  $_SESSION["userName"] = $userName;
+  $_SESSION["password"] = $password;
+  $_SESSION["isServerAdmin"] = $isServerAdmin;
+  redirectToIndexPage();
+
+  UNBIND_AND_AUTH_FAILED:
+  ldap_unbind($ldapObj);
+  AUTH_FAILED:
   $isAuthFailed = true;
 }
 

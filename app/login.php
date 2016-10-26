@@ -25,6 +25,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     if($ldapObj && ldap_bind($ldapObj, "uid=" . $userName . $ldapUserRootDN, $password)) {
       ldap_unbind($ldapObj);
       $_SESSION["state"] = "logined";
+      $_SESSION["userName"] = $userName;
+      $_SESSION["password"] = $password;
       redirectToIndexPage();
     }
   }

@@ -15,7 +15,7 @@ if($_SESSION && isset($_SESSION["state"])) {
 
 $isAuthFailed = false;
 
-if($_ENV["REQUEST_METHOD"] == "POST") {
+if($_SERVER["REQUEST_METHOD"] == "POST") {
   $userName = (string)filter_input(INPUT_POST, "username");
   $password = (string)filter_input(INPUT_POST, "password");
   if(!empty($userName) && !empty($password)) {

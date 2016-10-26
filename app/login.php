@@ -27,7 +27,7 @@ if($_ENV["REQUEST_METHOD"] = "POST") {
       $_SESSION["state"] = "logined";
       redirectToIndexPage();
     }
-  } 
+  }
   $isAuthFailed = true;
 }
 
@@ -70,7 +70,7 @@ if($_ENV["REQUEST_METHOD"] = "POST") {
             ログインしたままにする
           </label>
         </div>
-        <button type="reset" class="btn btn-default"></button>
+        <button type="reset" class="btn btn-default"><span class="glyphicon glyphicon-remove"></span> リセット</button>
         <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon log-in"></span> ログイン</button>
       </form>
     </div>

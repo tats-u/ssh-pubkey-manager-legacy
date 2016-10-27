@@ -1,5 +1,7 @@
 <?php
 
+require_once("config.php");
+
 function GetKeyListFromDB($userName) {
     $dsn = "mysql:dbname=" . $dbName . ";host=" . $dbServer;
     $dbObj = null;

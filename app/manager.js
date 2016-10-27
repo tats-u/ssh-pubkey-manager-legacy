@@ -77,7 +77,7 @@ app.controller("pubkeyListController", ["$scope","valueFormatter", "$timeout", "
                 return;
             }
             THIS.keys.length = 0; // 削除
-            Array.prototype.push.apply(THIS.keys, data); // 末尾に追加
+            Array.prototype.push.apply(THIS.keys, data.keys); // 末尾に追加
         }).error(function(data,status) {
             alert("データの取得に失敗しました");
             THIS.keys.length = 0;

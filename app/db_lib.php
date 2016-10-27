@@ -87,7 +87,7 @@ function AddOneKey($dbServer, $dbUser, $dbPass, $dbName, $userName, $keyData) {
         return ["succeeded" => true];
     } catch(PDOException $e) {
         $dbObj->rollBack();
-        return ["succeeded" => false, "message" => "公開鍵のリストを取得するクエリに失敗しました"];
+        return ["succeeded" => false, "message" => "公開鍵をリストに登録するクエリに失敗しました"];
     }
 }
 

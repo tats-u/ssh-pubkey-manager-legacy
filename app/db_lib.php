@@ -9,7 +9,7 @@ function GetKeyListFromDB($userName) {
     try {
         $dbObj = new PDO($dsn, $dbUser, $dbPass);
     } catch(PDOException $e) {
-        return ["succeeded" => false, "message" => "データベースに接続できませんでした"];
+        return ["succeeded" => false, "message" => "データベースに接続できませんでした\n" . $e.getMessage()];
     }
     try {
         $dbQuery = $dbObj->prepare("select key_name,key_type,key_content,key_comment from pubkeys where user_index in (select user_index from user_name where user_name = ?)");

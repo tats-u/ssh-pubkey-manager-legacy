@@ -77,7 +77,7 @@ function AddOneKey($dbServer, $dbUser, $dbPass, $dbName, $userName, $keyData) {
                 $dbObj->rollBack();
                 return ["succeeded" => false, "message" => $userName . "のユーザ番号が複数登録されています"];
                 break;
-        } 
+        }
         $dbQuery = $dbObj->prepare("insert into pubkeys values (?,?,?,?,?)");
         if(!$dbQuery->execute([$userIndex, $keyData["name"], $keyData["type"], $keyData["content"], $keyData["comment"]])) {
             $dbObj->rollBack();
@@ -91,4 +91,65 @@ function AddOneKey($dbServer, $dbUser, $dbPass, $dbName, $userName, $keyData) {
     }
 }
 
+/*! @brief 与えられた公開鍵を削除する
+    @param dbServer データベースサーバを表す文字列
+    @param dbUser データベースに接続するユーザ名
+    @param dbPass データベースに接続するパスワード
+    @param dbName データベースの名前
+    @param userName 公開鍵を削除するユーザ名
+    @param keyData 公開鍵(["name" => "公開鍵の名前", "type" => "公開鍵の種類(ssh-ed25519など)", "content" => "公開鍵を表す文字列(Base64)", "comment" => "公開鍵のコメント"])
+    @return ["succeeded" => bool(削除に成功したか), "message" => "エラーメッセージ(削除失敗時のみ) / 警告メッセージ(削除成功したが削除鍵数が1つでなかった場合)" / false (1つの鍵を削除することに成功した場合)]
+*/
+function DeleteOneKey($dbServer, $dbUser, $dbPass, $dbName, $userName, $keyData) {
+    $dsn = "mysql:dbname=" . $dbName . ";host=" . $dbServer;
+    $dbObj = null;
+    
+    if(!isset($dbServer, $dbUser, $dbPass, $dbName, $userName, $keyData)) return ["succeeded" => false, "message" => "引数が不足しています"];
+    if(!array_key_exists("name", $keyData) || !array_key_exists("type", $keyData) || !array_key_exists("content", $keyData) || !array_key_exists("comment", $keyData)) return ["succeeded" => false, "message" => "公開鍵を削除するのに必要なデータのいずれかが不足しています"];
+    if($keyData["name"] == "") return ["succeeded" => false, "message" => "名前が空です"];
+    if(!preg_match("/(ssh-(rsa|dss|ed25519)|ecdsa-sha2-nistp(256|384|521))/",$keyData["type"])) return ["succeeded" => false, "message" => "公開鍵のタイプ「" . $keyData["type"] . "」は無効です"];
+    if(!preg_match("@[0-9A-Za-z+/]+(==?)?@", $keyData["content"])) return ["succeeded" => false, "message" => "鍵の内容が有効なBase64文字列ではありません"]; 
+
+    try {
+        $dbObj = new PDO($dsn, $dbUser, $dbPass);
+    } catch(PDOException $e) {
+        return ["succeeded" => false, "message" => "データベースに接続できませんでした"];
+    }
+
+    try {
+        $dbObj->beginTransaction();
+        $dbQuery = $dbObj->prepare("select user_index from user_name where user_name = ?");
+        if(!$dbQuery->execute([$userName])) {
+            $dbObj->rollBack();
+            return ["succeeded" => false, "message" => "ユーザインデックスを取得できませんでした"];
+        }
+        $userIndex = null;
+        if($dbQuery->rowCount() != 1) {
+            $dbObj->rollBack();
+            return ["succeeded" => false, "message" => $userName . "のユーザ番号が非ユニークです"];
+        }
+        $userIndex = $dbQuery->fetch()[0];
+        $dbQuery = $dbObj->prepare("delete from pubkeys where user_index = ? and key_name = ? and key_type = ? and key_content = ? and key_comment = ?)");
+        if(!$dbQuery->execute([$userIndex, $keyData["name"], $keyData["type"], $keyData["content"], $keyData["comment"]])) {
+            $dbObj->rollBack();
+            return ["succeeded" => false, "message" => "公開鍵をリストから削除するクエリに失敗しました"];
+        }
+        $deletedKeyCount = $dbQuery->rowCount();
+        $dbObj->commit(); 
+        $message = false;
+        switch($deletedKeyCount) {
+            case 1:break;
+            case 0:
+                $message = "該当する鍵はリストにはなく、すでに削除されているようです";
+                break;
+            default:
+                $message = "該当する鍵が複数個あったため、全て削除しました";
+                break;
+        }
+        return ["succeeded" => true, "message" => $message];
+    } catch(PDOException $e) {
+        $dbObj->rollBack();
+        return ["succeeded" => false, "message" => "公開鍵のリストを削除するクエリを実行中に例外を受け取りました"];
+    }
+}
 ?>

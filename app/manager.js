@@ -75,7 +75,26 @@ app.controller("pubkeyListController", ["$scope","valueFormatter", "$timeout", "
     };
 
     this.DeleteOneKey = function(index) {
-        this.keys.splice(index, 1);
+        $http({
+            method: "POST",
+            url: dataManagerURL,
+            data: 
+            {
+                targetUser: myID,
+                operation: "delete",
+                key: THIS.keys[index],
+            }
+        }).success(function(data) {
+            if(data.succeeded) {
+                if(data.message !== false) {
+                    alert("鍵の削除には成功しましたが、警告があります\n" + data.message);
+                }
+                this.keys.splice(index, 1);
+            }
+            else alert("鍵の削除に失敗しました\n" + data.message);
+        }).error(function(data,status) {
+            alert("鍵の削除に失敗しました");
+        });
     };
 
     this.GetKeyList = function() {

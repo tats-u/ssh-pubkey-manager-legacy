@@ -78,7 +78,7 @@ function AddOneKey($dbServer, $dbUser, $dbPass, $dbName, $userName, $keyData) {
                 return ["succeeded" => false, "message" => $userName . "のユーザ番号が複数登録されています"];
                 break;
         } 
-        $dbQuery = $dbObj->prepare("insert into pubkeys values (?,?,?,?)");
+        $dbQuery = $dbObj->prepare("insert into pubkeys values (?,?,?,?,?)");
         if(!$dbQuery->execute([$userIndex, $keyData["name"], $keyData["type"], $keyData["content"], $keyData["comment"]])) {
             $dbObj->rollBack();
             return ["succeeded" => false, "message" => "公開鍵をリストに登録するクエリに失敗しました"];

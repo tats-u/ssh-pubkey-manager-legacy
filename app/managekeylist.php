@@ -1,6 +1,6 @@
 <?php
 
-require("db_lib.php");
+require_once("db_lib.php");
 
 header("Content-Type: application/json; charset=utf-8");
 function ErrorAndExit($message = "") {

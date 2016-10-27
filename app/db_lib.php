@@ -59,7 +59,7 @@ function AddOneKey($dbServer, $dbUser, $dbPass, $dbName, $userName, $keyData) {
         $userIndex = null;
         switch($dbQuery->rowCount()) {
             case 1:
-                $userIndex = $dbQuery->fetch();
+                $userIndex = $dbQuery->fetch()[0];
                 break;
             case 0: // ユーザインデックスに登録
                 $dbQuery = $dbObj->prepare("insert into user_index(user_name) values (?)");
@@ -72,7 +72,7 @@ function AddOneKey($dbServer, $dbUser, $dbPass, $dbName, $userName, $keyData) {
                     $dbObj->rollBack();
                     return ["succeeded" => false, "message" => "登録したユーザインデックスの再取得に失敗しました"];
                 }
-                $userIndex = $dbQuery->fetch();
+                $userIndex = $dbQuery->fetch()[0];
             default:
                 $dbObj->rollBack();
                 return ["succeeded" => false, "message" => $userName . "のユーザ番号が複数登録されています"];

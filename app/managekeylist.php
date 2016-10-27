@@ -27,7 +27,7 @@ $targetUser = $data["targetUser"];
 switch($operation) {
     case "get":
         if($targetUser != $_SESSION["userName"]) ErrorAndExit("現在はログインしているユーザの情報しか取得できません");
-        print(json_encode(GetKeyListFromDB($targetUser)));
+        print(json_encode(GetKeyListFromDB($dbServer, $dbUser, $dbPass, $targetUser)));
         break;
     default:
         ErrorAndExit("operationの値が不正か、指定されていません");

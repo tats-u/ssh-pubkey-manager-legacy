@@ -2,7 +2,7 @@
 
 require_once("config.php");
 
-function GetKeyListFromDB($dbServer, $dbUser, $dbPass, $userName) {
+function GetKeyListFromDB($dbServer, $dbUser, $dbPass, $dbName, $userName) {
     $dsn = "mysql:dbname=" . $dbName . ";host=" . $dbServer;
     $dbObj = null;
     

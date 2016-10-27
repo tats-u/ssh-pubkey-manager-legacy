@@ -33,6 +33,7 @@ switch($operation) {
         if($targetUser != $_SESSION["userName"]) ErrorAndExit("現在はログインしているユーザの情報しか取得できません");
         if(!array_key_exists("key", $data)) ErrorAndExit("公開鍵の情報が与えられていません");
         print(json_encode(AddOneKey($dbServer, $dbUser, $dbPass, $dbName, $targetUser, $data["key"])));
+        break;
     default:
         ErrorAndExit("operationの値が不正か、指定されていません");
         break;

@@ -18,8 +18,10 @@ if($_SERVER["REQUEST_METHOD"] != "POST") {
     ErrorAndExit("POSTのみ受け付けています");
 }
 
-$operation = (string)filter_input(INPUT_POST, "operation");
-$targetUser = (string)filter_input(INPUT_POST, "targetUser");
+$data = json_decode(file_get_contents('php://input'), TRUE);
+
+$operation = $data["operation"];
+$targetUser = $data["targetUser"];
 
 switch($operation) {
     case "get":

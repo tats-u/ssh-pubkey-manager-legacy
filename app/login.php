@@ -20,10 +20,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
   $userName = (string)filter_input(INPUT_POST, "username");
   $password = (string)filter_input(INPUT_POST, "password");
   if(empty($userName) || empty($password)) goto AUTH_FAILED;
-  ldap_set_option($con, LDAP_OPT_PROTOCOL_VERSION, 3);
-  ldap_set_option($con, LDAP_OPT_TIMELIMIT, 1);
   $ldapObj = ldap_connect("ldap://" . $ldapServer);
-  if(!$ldapObj || !ldap_bind($ldapObj, "uid=" . $userName . $ldapUserRootDN, $password)) goto AUTH_FAILED;
+  if(!$ldapObj) goto AUTH_FAILED;
+  ldap_set_option($ldapObj, LDAP_OPT_PROTOCOL_VERSION, 3);
+  ldap_set_option($ldapObj, LDAP_OPT_TIMELIMIT, 1);
+  if(!ldap_bind($ldapObj, "uid=" . $userName . $ldapUserRootDN, $password)) goto AUTH_FAILED;
 
   $userDN = null;
   $groupPeopleDN = null;

@@ -89,7 +89,7 @@ app.controller("pubkeyListController", ["$scope","valueFormatter", "$timeout", "
                 if(data.message !== false) {
                     alert("鍵の削除には成功しましたが、警告があります\n" + data.message);
                 }
-                this.keys.splice(index, 1);
+                THIS.keys.splice(index, 1);
             }
             else alert("鍵の削除に失敗しました\n" + data.message);
         }).error(function(data,status) {

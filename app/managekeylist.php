@@ -26,16 +26,16 @@ $targetUser = $data["targetUser"];
 
 switch($operation) {
     case "get":
-        if($targetUser != $_SESSION["userName"]) ErrorAndExit("現在はログインしているユーザの情報しか取得できません");
+        if($targetUser != $_SESSION["userName"]) ErrorAndExit("現在はログインしているユーザの鍵しか取得できません");
         print(json_encode(GetKeyListFromDB($dbServer, $dbUser, $dbPass, $dbName, $targetUser)));
         break;
     case "add":
-        if($targetUser != $_SESSION["userName"]) ErrorAndExit("現在はログインしているユーザの情報しか取得できません");
+        if($targetUser != $_SESSION["userName"]) ErrorAndExit("現在はログインしているユーザの鍵しか登録できません");
         if(!array_key_exists("key", $data)) ErrorAndExit("公開鍵の情報が与えられていません");
         print(json_encode(AddOneKey($dbServer, $dbUser, $dbPass, $dbName, $targetUser, $data["key"])));
         break;
     case "delete":
-        if($targetUser != $_SESSION["userName"]) ErrorAndExit("現在はログインしているユーザの情報しか削除できません");
+        if($targetUser != $_SESSION["userName"]) ErrorAndExit("現在はログインしているユーザの鍵しか削除できません");
         if(!array_key_exists("key", $data)) ErrorAndExit("公開鍵の情報が与えられていません");
         print(json_encode(DeleteOneKey($dbServer, $dbUser, $dbPass, $dbName, $targetUser, $data["key"])));
         break;

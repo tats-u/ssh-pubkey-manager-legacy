@@ -129,7 +129,7 @@ function DeleteOneKey($dbServer, $dbUser, $dbPass, $dbName, $userName, $keyData)
             return ["succeeded" => false, "message" => $userName . "のユーザ番号が非ユニークです"];
         }
         $userIndex = $dbQuery->fetch()[0];
-        $dbQuery = $dbObj->prepare("delete from pubkeys where user_index = ? and key_name = ? and key_type = ? and key_content = ? and key_comment = ?)");
+        $dbQuery = $dbObj->prepare("delete from pubkeys where user_index = ? and key_name = ? and key_type = ? and key_content = ? and key_comment = ?");
         if(!$dbQuery->execute([$userIndex, $keyData["name"], $keyData["type"], $keyData["content"], $keyData["comment"]])) {
             $dbObj->rollBack();
             return ["succeeded" => false, "message" => "公開鍵をリストから削除するクエリに失敗しました"];

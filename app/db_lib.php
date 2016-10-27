@@ -78,6 +78,15 @@ function AddOneKey($dbServer, $dbUser, $dbPass, $dbName, $userName, $keyData) {
                 return ["succeeded" => false, "message" => $userName . "のユーザ番号が複数登録されています"];
                 break;
         }
+        $dbQuery = $dbObj->prepare("select count(*) from pubkeys where user_index = ? and key_type = ? and key_content = ?");
+        if(!$dbQuery->execute([$userIndex, $keyData["type"], $keyData["content"]])) {
+            $dbObj->rollBack();
+            return ["succeeded" => false, "message" => "登録する公開鍵の重複チェックをするクエリに失敗しました"];
+        }
+        if($dbQuery->fetch()[0] != 0) {
+            $dbObj->rollBack();
+            return ["succeeded" => false, "message" => "その鍵はすでに登録されています"];
+        }
         $dbQuery = $dbObj->prepare("insert into pubkeys values (?,?,?,?,?)");
         if(!$dbQuery->execute([$userIndex, $keyData["name"], $keyData["type"], $keyData["content"], $keyData["comment"]])) {
             $dbObj->rollBack();

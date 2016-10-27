@@ -41,7 +41,7 @@ function AddOneKey($dbServer, $dbUser, $dbPass, $dbName, $userName, $keyData) {
     if(!array_key_exists("name", $keyData) || !array_key_exists("type", $keyData) || !array_key_exists("content", $keyData) || !array_key_exists("comment", $keyData)) return ["succeeded" => false, "message" => "公開鍵を登録するのに必要なデータのいずれかが不足しています"];
     if($keyData["name"] == "") return ["succeeded" => false, "message" => "名前が空です"];
     if(!preg_match("/(ssh-(rsa|dss|ed25519)|ecdsa-sha2-nistp(256|384|521))/",$keyData["type"])) return ["succeeded" => false, "message" => "公開鍵のタイプ「" . $keyData["type"] . "」は無効です"];
-    if(!preg_match("@[0-9A-Za-z+/]+(==?)?", $keyData["content"])) return ["succeeded" => false, "message" => "鍵の内容が有効なBase64文字列ではありません"]; 
+    if(!preg_match("@[0-9A-Za-z+/]+(==?)?@", $keyData["content"])) return ["succeeded" => false, "message" => "鍵の内容が有効なBase64文字列ではありません"]; 
 
     try {
         $dbObj = new PDO($dsn, $dbUser, $dbPass);

@@ -13,7 +13,7 @@ function GetKeyListFromDB($dbServer, $dbUser, $dbPass, $dbName, $userName) {
     }
     try {
         $dbQuery = $dbObj->prepare("select key_name,key_type,key_content,key_comment from pubkeys where user_index in (select user_index from user_name where user_name = ?)");
-        $queryResult = $dbQuery->execute($userName);
+        $queryResult = $dbQuery->execute([$userName]);
         $data = [];
         foreach($queryResult as $row) {
             array_push($data, ["name" => $row["key_name"], "type" => $row["key_type"], "content" => $row["key_content"], "comment" => $row["key_comment"]]);

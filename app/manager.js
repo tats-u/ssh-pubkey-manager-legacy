@@ -191,7 +191,7 @@ app.controller("pubkeyAddModalController", ["$scope", "$uibModalInstance", funct
                 });
                 return;
             }
-            if(!/(ssh-(rsa|dss|ed25519)|ecdsa-sha2-nistp(256|384|521))/.test(keyType) || !/^[0-9A-Za-z+/=]+$/.test(keyContent)) {
+            if(!/(ssh-(rsa|dss|ed25519)|ecdsa-sha2-nistp(256|384|521))/.test(keyType) || !/^[0-9A-Za-z+/]+(==?)?$/.test(keyContent)) {
                 alert("これは公開鍵ファイルではありません");
                 $scope.$apply(function() {
                     $scope.keyDataFile = null;

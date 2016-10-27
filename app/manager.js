@@ -37,11 +37,12 @@ app.service("valueFormatter", [function() {
     };
 }]);
 
+app.constant("dataManagerURL", "managekeylist.php");
 
 /*! @brief メインコントローラ
     
 */
-app.controller("pubkeyListController", ["$scope","valueFormatter", "$timeout", "$http", "$uibModal", function($scope, valueFormatter, $timeout, $http, $uibModal) {
+app.controller("pubkeyListController", ["$scope","valueFormatter", "$timeout", "$http", "$uibModal", "dataManagerURL", function($scope, valueFormatter, $timeout, $http, $uibModal, dataManagerURL) {
     $scope.valueFormatter = valueFormatter;
     this.keys = [];
     THIS = this;
@@ -53,7 +54,21 @@ app.controller("pubkeyListController", ["$scope","valueFormatter", "$timeout", "
             controller: 'pubkeyAddModalController',
         });
         modalObj.result.then(function(addKeyObj) {
-            THIS.keys.push(addKeyObj);
+            $http({
+                method: "POST",
+                url: dataManagerURL,
+                data: 
+                {
+                    targetUser: myID,
+                    operation: "add",
+                    key: addKeyObj,
+                }
+            }).success(function(data) {
+                if(data.succeeded) THIS.keys.push(addKeyObj);
+                else alert("鍵の追加に失敗しました\n" + data.message);
+            }).error(function(data,status) {
+                alert("鍵の追加に失敗しました");
+            });
         }, function() {
             // キャンセルされた
         });
@@ -63,10 +78,10 @@ app.controller("pubkeyListController", ["$scope","valueFormatter", "$timeout", "
         this.keys.splice(index, 1);
     };
 
-    this.GetKeyList = function(URL) {
+    this.GetKeyList = function() {
         $http({
             method: "POST",
-            url: URL,
+            url: dataManagerURL,
             data: {operation: "get",
                 targetUser: myID}
         }).success(function(data) {
@@ -84,7 +99,7 @@ app.controller("pubkeyListController", ["$scope","valueFormatter", "$timeout", "
         });
     };
 
-    this.GetKeyList("managekeylist.php");
+    this.GetKeyList();
 }]);
 
 app.controller("pubkeyAddModalController", ["$scope", "$uibModalInstance", function($scope, $uibModalInstance) {

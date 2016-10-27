@@ -1,7 +1,7 @@
 <?php
 
-require("config.php");
-require("ldap_lib.php");
+require_once("config.php");
+require_once("ldap_lib.php");
 
 function redirectToIndexPage() {
   header("Location: index.php",TRUE,307);

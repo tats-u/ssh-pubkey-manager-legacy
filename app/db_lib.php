@@ -62,7 +62,7 @@ function AddOneKey($dbServer, $dbUser, $dbPass, $dbName, $userName, $keyData) {
                 $userIndex = $dbQuery->fetch()[0];
                 break;
             case 0: // ユーザインデックスに登録
-                $dbQuery = $dbObj->prepare("insert into user_index(user_name) values (?)");
+                $dbQuery = $dbObj->prepare("insert into user_name(user_name) values (?)");
                 if(!$dbQuery->execute([$userName])) {
                     $dbObj->rollBack();
                     return ["succeeded" => false, "message" => "ユーザインデックスを登録できませんでした"];

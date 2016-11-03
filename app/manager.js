@@ -170,6 +170,7 @@ app.controller("pubkeyAddModalController", ["$scope", "$uibModalInstance", funct
             var keyType = rawContent.slice(0,space1);
             var keyContent = rawContent.slice(space1 + 1,space2);
             var keyComment = rawContent.slice(space2 + 1);
+            keyComment = keyComment.replace(/(\r|\n).*$/, "");
             if(/^-+BEGIN$/.test(keyType) && /^PRIVATE KEY-+/.test(keyComment)) {
                 alert("これは秘密鍵ファイルです\n「"+ $scope.keyDataFile.name + ".pub」があればそれが公開鍵なので選んでください");
                 $scope.$apply(function() {
@@ -205,6 +206,7 @@ app.controller("pubkeyAddModalController", ["$scope", "$uibModalInstance", funct
                 });
                 return;
             }
+            
             $uibModalInstance.close({
                 name: $scope.keyName,
                 type: keyType,

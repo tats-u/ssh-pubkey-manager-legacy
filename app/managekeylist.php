@@ -10,6 +10,11 @@ function ErrorAndExit($message = "") {
     exit();
 }
 
+if(!($initializationStatus = InitDBIfNeeded($dbServer, $dbUser, $dbPass, $dbName))["succeeded"]) {
+    print(json_encode($initializationStatus));
+    exit();
+}
+
 session_start();
 if(!$_SESSION || empty($_SESSION["state"])) {
     ErrorAndExit("認証がされていません");

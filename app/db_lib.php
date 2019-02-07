@@ -2,6 +2,36 @@
 
 require_once("config.php");
 
+function InitDBIfNeeded($dbServer, $dbUser, $dbPass, $dbName) {
+    $dsn = "mysql:dbname=${dbName};host=${dbServer}";
+    $dbObj = null;
+
+    try {
+        $dbObj = new PDO($dsn, $dbUser, $dbPass);
+    } catch(PDOException $e) {
+        return ["succeeded" => false, "message" => "データベースに接続できませんでした"];
+    }
+    try {
+        $dbObj->query("CREATE TABLE `pubkeys` IF NOT EXISTS (
+        `user_index` bigint(20) unsigned NOT NULL,
+        `key_name` varchar(255) NOT NULL,
+        `key_type` varchar(31) NOT NULL,
+        `key_content` text NOT NULL,
+        `key_comment` varchar(255) NOT NULL,
+        KEY `user_index` (`user_index`),
+        CONSTRAINT `pubkeys_ibfk_1` FOREIGN KEY (`user_index`) REFERENCES `user_name` (`user_index`)
+        ) DEFAULT CHARSET=utf8");
+        $dbObj->query("CREATE TABLE `user_name` IF NOT EXISTS (
+        `user_index` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+        `user_name` varchar(255) NOT NULL,
+        PRIMARY KEY (`user_index`)
+        ) AUTO_INCREMENT=16 DEFAULT CHARSET=utf8");
+    } catch(PDOException $e) {
+        return ["succeeded" => false, "message" => "テーブルの作成に失敗しました"];
+    }
+    return ["succeeded" => true, "message" => ""];
+}
+
 function GetKeyListFromDB($dbServer, $dbUser, $dbPass, $dbName, $userName) {
     $dsn = "mysql:dbname=${dbName};host=${dbServer}";
     $dbObj = null;

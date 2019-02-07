@@ -9,7 +9,7 @@ if (file_exists(__DIR__ . "/.env")) {
 
 function GetConfigFromEnvOrDie($name) {
     $valueOrFalse = getenv($name);
-    if($valueOrFalse != false) {
+    if($valueOrFalse !== false) {
         return $valueOrFalse;
     }
     http_response_code(500);

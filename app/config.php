@@ -28,11 +28,14 @@ $ldapPassword = GetConfigFromEnvOrDie("LDAP_PASSWORD");
 $dbServer = GetConfigFromEnvOrDie("DB_SERVER");
 
 //! データベースユーザ名
-$dbUser = GetConfigFromEnvOrDie("DB_USER");
+$dbUser = getenv("DB_USER") ?: "root";
 
 //! データベースパスワード
 $dbPass = GetConfigFromEnvOrDie("DB_PASS");
 
 //! データベース名
-$dbName = GetConfigFromEnvOrDie("DB_NAME");
+$dbName = getenv("DB_NAME") ?: "pubkey_manager";
+
+//! アプリ名
+$appName = getenv("APP_NAME") ?: "公開鍵管理システム";
 ?>

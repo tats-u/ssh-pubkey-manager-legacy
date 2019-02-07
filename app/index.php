@@ -19,7 +19,7 @@ if(!$_SESSION || empty($_SESSION["state"])) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex,nofollow,noarchive">
-    <title>鍵管理ページ - 戸田研究室公開鍵管理システム</title>
+    <title>鍵管理ページ - <?php print($appName); ?></title>
     <!-- jQuery JS 3.1.0 -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <!-- Bootstrap JS 3.3.7 -->
@@ -45,7 +45,7 @@ if(!$_SESSION || empty($_SESSION["state"])) {
         </div>
     </nav>
     <hgroup class="text-center">
-      <h1>戸田研究室公開鍵管理システム</h1>
+      <h1><?php print($appName); ?></h1>
       <h2>鍵管理ページ</h2>
     </hgroup>
     <div ng-controller="pubkeyListController as ctl" class="container">

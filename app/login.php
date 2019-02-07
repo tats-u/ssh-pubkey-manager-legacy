@@ -59,7 +59,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex,nofollow,noarchive">
-    <title>ログイン - 戸田研究室公開鍵管理システム</title>
+    <title>ログイン - <?php print($appName); ?></title>
     <!-- Bootstrap JS 3.3.7 -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <!-- Bootstrap CSS 3.3.7 -->
@@ -70,7 +70,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
   </head>
   <body>
-    <h1 class="text-center">戸田研究室公開鍵管理システム　ログイン</h1>
+    <h1 class="text-center"><?php print($appName); ?>　ログイン</h1>
 
     <div class="container">
       <?php

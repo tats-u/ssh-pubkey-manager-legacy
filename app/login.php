@@ -76,7 +76,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
       <?php
       if($isAuthFailed) {
         print('<div class="alert alert-danger"><strong>ユーザ名またはパスワードが間違っています！</strong> いずれも正しいかどうか確認してください。</div>');
-      } 
+      }
       ?>
       <form action="login.php" method="POST">
         <div class="form-group">

@@ -5,7 +5,7 @@ require_once("config.php");
 function GetKeyListFromDB($dbServer, $dbUser, $dbPass, $dbName, $userName) {
     $dsn = "mysql:dbname=" . $dbName . ";host=" . $dbServer;
     $dbObj = null;
-    
+
     try {
         $dbObj = new PDO($dsn, $dbUser, $dbPass);
     } catch(PDOException $e) {
@@ -14,13 +14,13 @@ function GetKeyListFromDB($dbServer, $dbUser, $dbPass, $dbName, $userName) {
     try {
         $dbQuery = $dbObj->prepare("select key_name,key_type,key_content,key_comment from pubkeys where user_index in (select user_index from user_name where user_name = ?)");
         if(!$dbQuery->execute([$userName])) return ["succeeded" => false, "message" => "公開鍵のリストを取得するクエリに失敗しました"];
-        $result = $dbQuery->fetchAll(); 
+        $result = $dbQuery->fetchAll();
         return ["succeeded" => true, "keys" => array_map(function($row) {
             return ["name" => $row["key_name"], "type" => $row["key_type"], "content" => $row["key_content"], "comment" => $row["key_comment"]];
         }, $result)];
     } catch(PDOException $e) {
         return ["succeeded" => false, "message" => "公開鍵のリストを取得するクエリに失敗しました"];
-    }   
+    }
 }
 
 /*! @brief 公開鍵を登録する
@@ -36,12 +36,12 @@ function GetKeyListFromDB($dbServer, $dbUser, $dbPass, $dbName, $userName) {
 function AddOneKey($dbServer, $dbUser, $dbPass, $dbName, $userName, $keyData) {
     $dsn = "mysql:dbname=" . $dbName . ";host=" . $dbServer;
     $dbObj = null;
-    
+
     if(!isset($dbServer, $dbUser, $dbPass, $dbName, $userName, $keyData)) return ["succeeded" => false, "message" => "引数が不足しています"];
     if(!array_key_exists("name", $keyData) || !array_key_exists("type", $keyData) || !array_key_exists("content", $keyData) || !array_key_exists("comment", $keyData)) return ["succeeded" => false, "message" => "公開鍵を登録するのに必要なデータのいずれかが不足しています"];
     if($keyData["name"] == "") return ["succeeded" => false, "message" => "名前が空です"];
     if(!preg_match("/(ssh-(rsa|dss|ed25519)|ecdsa-sha2-nistp(256|384|521))/",$keyData["type"])) return ["succeeded" => false, "message" => "公開鍵のタイプ「" . $keyData["type"] . "」は無効です"];
-    if(!preg_match("@[0-9A-Za-z+/]+(==?)?@", $keyData["content"])) return ["succeeded" => false, "message" => "鍵の内容が有効なBase64文字列ではありません"]; 
+    if(!preg_match("@[0-9A-Za-z+/]+(==?)?@", $keyData["content"])) return ["succeeded" => false, "message" => "鍵の内容が有効なBase64文字列ではありません"];
 
     try {
         $dbObj = new PDO($dsn, $dbUser, $dbPass);
@@ -93,7 +93,7 @@ function AddOneKey($dbServer, $dbUser, $dbPass, $dbName, $userName, $keyData) {
             $dbObj->rollBack();
             return ["succeeded" => false, "message" => "公開鍵をリストに登録するクエリに失敗しました"];
         }
-        $dbObj->commit(); 
+        $dbObj->commit();
         return ["succeeded" => true];
     } catch(PDOException $e) {
         $dbObj->rollBack();
@@ -113,12 +113,12 @@ function AddOneKey($dbServer, $dbUser, $dbPass, $dbName, $userName, $keyData) {
 function DeleteOneKey($dbServer, $dbUser, $dbPass, $dbName, $userName, $keyData) {
     $dsn = "mysql:dbname=" . $dbName . ";host=" . $dbServer;
     $dbObj = null;
-    
+
     if(!isset($dbServer, $dbUser, $dbPass, $dbName, $userName, $keyData)) return ["succeeded" => false, "message" => "引数が不足しています"];
     if(!array_key_exists("name", $keyData) || !array_key_exists("type", $keyData) || !array_key_exists("content", $keyData) || !array_key_exists("comment", $keyData)) return ["succeeded" => false, "message" => "公開鍵を削除するのに必要なデータのいずれかが不足しています"];
     if($keyData["name"] == "") return ["succeeded" => false, "message" => "名前が空です"];
     if(!preg_match("/(ssh-(rsa|dss|ed25519)|ecdsa-sha2-nistp(256|384|521))/",$keyData["type"])) return ["succeeded" => false, "message" => "公開鍵のタイプ「" . $keyData["type"] . "」は無効です"];
-    if(!preg_match("@[0-9A-Za-z+/]+(==?)?@", $keyData["content"])) return ["succeeded" => false, "message" => "鍵の内容が有効なBase64文字列ではありません"]; 
+    if(!preg_match("@[0-9A-Za-z+/]+(==?)?@", $keyData["content"])) return ["succeeded" => false, "message" => "鍵の内容が有効なBase64文字列ではありません"];
 
     try {
         $dbObj = new PDO($dsn, $dbUser, $dbPass);
@@ -146,7 +146,7 @@ function DeleteOneKey($dbServer, $dbUser, $dbPass, $dbName, $userName, $keyData)
             return ["succeeded" => false, "message" => "公開鍵をリストから削除するクエリに失敗しました"];
         }
         $deletedKeyCount = $dbQuery->rowCount();
-        $dbObj->commit(); 
+        $dbObj->commit();
         $message = false;
         switch($deletedKeyCount) {
             case 1:break;

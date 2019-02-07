@@ -2,7 +2,7 @@
 function GetUserDN($ad, $samaccountname, $basedn) {
     $attributes = array('dn');
     $result = ldap_search($ad, $basedn,
-        "(uid={$samaccountname})", $attributes);
+    "(uid={$samaccountname})", $attributes);
     if ($result === FALSE) { return ''; }
     $entries = ldap_get_entries($ad, $result);
     if ($entries['count']>0) { return $entries[0]['dn']; }
@@ -12,7 +12,7 @@ function GetUserDN($ad, $samaccountname, $basedn) {
 function GetGroupDN($ad, $samaccountname, $basedn) {
     $attributes = array('dn');
     $result = ldap_search($ad, $basedn,
-        "(cn={$samaccountname})", $attributes);
+    "(cn={$samaccountname})", $attributes);
     if ($result === FALSE) { return ''; }
     $entries = ldap_get_entries($ad, $result);
     if ($entries['count']>0) { return $entries[0]['dn']; }
@@ -37,13 +37,13 @@ function CheckGroupEx($ad, $userdn, $groupdn) {
 function GetGroupMembers($ad, $samaccountname, $basedn) {
     $attributes = array('memberUid');
     $result = ldap_search($ad, $basedn,
-        "(cn={$samaccountname})", $attributes);
+    "(cn={$samaccountname})", $attributes);
     if ($result === FALSE) { return []; }
     $entries = ldap_get_entries($ad, $result);
     if ($entries['count']>0) {
-      $ret = $entries[0]["memberuid"];
-      unset($ret["count"]);
-      return $ret;
+        $ret = $entries[0]["memberuid"];
+        unset($ret["count"]);
+        return $ret;
     }
     else { return []; };
 }

@@ -144,7 +144,7 @@ function AddOneKey($dbServer, $dbUser, $dbPass, $dbName, $userName, $keyData)
             return ['succeeded' => false, 'message' => '登録する公開鍵の重複チェックをするクエリに失敗しました'];
         }
 
-        if ($dbQuery->fetch()[0] !== 0) {
+        if ($dbQuery->fetchColumn() > 0) {
             $dbObj->rollBack();
             return ['succeeded' => false, 'message' => 'その鍵はすでに登録されています'];
         }

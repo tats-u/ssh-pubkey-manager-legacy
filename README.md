@@ -27,10 +27,10 @@
 
 ### DB 編
 
-- MySQL に新しいデータベースを作成 (名前を`.env`の`DB_NAME`に設定) (以下`pubkey_manager`とする)
-- MySQL にアプリ用のユーザ・ログインノードからのアクセス用のユーザ (以下それぞれ`pubkey_mgr_rw`・`pubkey_mgr_ro`とする) を作成、どちらも作成したデータベースへのアクセスのみを許可
-  - アプリ用のユーザはアプリをホスティングするサーバ (例: `192.168.0.2`) からのアクセスのみを許可 (`GRANT ALL PRIVILEGES ON pubkey_manager.* TO pubkey_mgr_rw@192.168.0.2`)
-  - ログインノード (例: `192.168.0.*`) からのアクセス用のユーザはログインノードからのアクセスのみを許可し、データベースへの書き込みを禁止する (読み取り専用) (`GRANT SELECT ON pubkey_manager.* TO pubkey_mgr_ro@'192.168.0.%'`)
+- MySQL に新しいデータベースを作成 (名前を`.env`の`DB_NAME`に設定) (以下`pubkey_manager`とする) (`CREATE DATABASE IF NOT EXISTS pubkey_manager`)
+- MySQL にアプリ (ホスティングするサーバのIP例: `192.168.0.2`) 用のユーザ・ログインノード (例: `192.168.0.*`) からのアクセス用のユーザ (以下それぞれ`pubkey_mgr_rw`・`pubkey_mgr_ro`とする) を作成(`CREATE USER pubkey_mgr_rw@192.168.0.2 IDENTIFIED BY '[パスワード]'; CREATE USER pubkey_mgr_ro@'192.168.0.%' IDENTIFIED BY '[パスワード]'`)、どちらも作成したデータベースへのアクセスのみを許可
+  - アプリ用のユーザはアプリをホスティングするサーバからのアクセスのみを許可 (`GRANT ALL PRIVILEGES ON pubkey_manager.* TO pubkey_mgr_rw@192.168.0.2`)
+  - ログインノードからのアクセス用のユーザはログインノードからのアクセスのみを許可し、データベースへの書き込みを禁止する (読み取り専用) (`GRANT SELECT ON pubkey_manager.* TO pubkey_mgr_ro@'192.168.0.%'`)
 
 ### ログインノード編
 

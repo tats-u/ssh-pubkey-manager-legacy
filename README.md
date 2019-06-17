@@ -21,7 +21,7 @@
     - `/app/composer*`
     - `/app/.env`
     - `/app/vendor`
-    - `/app/*.md`
+    - `/*.md`
   - (Nginx の場合)`/app/*.php`にアクセスした時に PHP-FPM にプロキシするように設定
   - `index.php`をディレクトリインデックスの候補に追加
 

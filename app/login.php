@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ldap_set_option($ldapObj, LDAP_OPT_PROTOCOL_VERSION, 3);
     ldap_set_option($ldapObj, LDAP_OPT_TIMELIMIT, 1);
 
-    if (!ldap_bind($ldapObj, 'uid=' . $userName . $ldapUserRootDN, $password)) {
+    if (!ldap_bind($ldapObj, "uid=$userName,$ldapUserRootDN", $password)) {
         goto AUTH_FAILED;
     }
 

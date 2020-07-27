@@ -23,6 +23,10 @@ function GetConfigFromEnvOrDie($name)
 $ldapServer = GetConfigFromEnvOrDie('LDAP_SERVER');
 $ldapBaseDN = GetConfigFromEnvOrDie('LDAP_BASE_DN');
 $ldapUserRootDN = GetConfigFromEnvOrDie('LDAP_USER_ROOT_DN');
+// 後方互換のため、先頭の「,」があれば除去
+if (substr($ldapUserRootDN, 0, 1) === ",") {
+    $ldapUserRootDN = substr($ldapUserRootDN, 1);
+}
 $ldapGroupRootDN = GetConfigFromEnvOrDie('LDAP_GROUP_ROOT_DN');
 $ldapBindDN = GetConfigFromEnvOrDie('LDAP_BIND_DN');
 $ldapPassword = GetConfigFromEnvOrDie('LDAP_PASSWORD');

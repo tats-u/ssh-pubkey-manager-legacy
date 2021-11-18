@@ -22,12 +22,12 @@ function InitDBIfNeeded($dbServer, $dbUser, $dbPass, $dbName)
         `key_comment` varchar(255) NOT NULL,
         KEY `user_index` (`user_index`),
         CONSTRAINT `pubkeys_ibfk_1` FOREIGN KEY (`user_index`) REFERENCES `user_name` (`user_index`)
-        ) DEFAULT CHARSET=utf8');
+        ) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin');
         $dbObj->query('CREATE TABLE `user_name` IF NOT EXISTS (
         `user_index` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
         `user_name` varchar(255) NOT NULL,
         PRIMARY KEY (`user_index`)
-        ) AUTO_INCREMENT=16 DEFAULT CHARSET=utf8');
+        ) AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin');
     } catch (PDOException $e) {
         return ['succeeded' => false, 'message' => 'テーブルの作成に失敗しました'];
     }
